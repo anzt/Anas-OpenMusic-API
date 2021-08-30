@@ -102,3 +102,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+# IGNORE
+node_modules
+.env
+.prod.env
