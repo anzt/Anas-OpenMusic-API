@@ -102,12 +102,17 @@ class SongsHandler {
     
           const { songId } = request.params;
     
-          this._service.editSongById(songId, request.payload);
+          const song = await this._service.editSongById(songId, request.payload);
     
-          return {
+          const response = h.response({
             status: 'success',
-            message: 'Lagu berhasil diperbarui',
-          };
+            message: 'Lagu berhasil diperbaharui',
+            data: {
+              song,
+            },
+          });
+          response.code(200);
+          return response;
         } catch (error) {
           if (error instanceof ClientError) {
             const response = h.response({
