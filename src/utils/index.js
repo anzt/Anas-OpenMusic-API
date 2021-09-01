@@ -5,7 +5,7 @@ const mapDBToModel = ({
     performer,
     genre,
     duration,
-    created_at,
+    inserted_at,
     updated_at,
   }) => ({
     id,
@@ -14,7 +14,7 @@ const mapDBToModel = ({
     performer,
     genre,
     duration,
-    createdAt: created_at,
+    createdAt: inserted_at,
     updatedAt: updated_at,
   });
   module.exports = { mapDBToModel };

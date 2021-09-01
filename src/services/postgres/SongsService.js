@@ -11,12 +11,12 @@ class SongsService {
 
     async addSong({ title, year, performer, genre, duration }) {
         const id = nanoid(16);
-        const createdAt = new Date().toISOString();
-        const updatedAt = createdAt;
+        const insertedAt = new Date().toISOString();
+        const updatedAt = insertedAt;
 
         const query = {
             text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id',
-            values: [id, title, year, performer, genre, duration, createdAt, updatedAt],
+            values: [id, title, year, performer, genre, duration, insertedAt, updatedAt],
         }
         const result = await this._pool.query(query);
 
@@ -44,16 +44,17 @@ class SongsService {
         return result.rows.map(mapDBToModel)[0];
     }
 
-    async editSongById(id, { title, year, performer, genre, duration }) {
+    async editSongById(songId, { title, year, performer, genre, duration }) {
         const updatedAt = new Date().toISOString();
         const query = {
-            text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5 updated_at = $6 WHERE id = $7 RETURNING id',
-            values: [title, year, performer, genre, duration, updatedAt, id],
+            text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5, updated_at = $6 WHERE id = $7 RETURNING id',
+            values: [title, year, performer, genre, duration, updatedAt, songId],
         };
 
         const result = await this._pool.query(query);
+
         if (!result.rows.length) {
-            throw new NotFoundError('Gagal memperbarui buku. Id tidak ditemukan');
+            throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
         }
     }
 

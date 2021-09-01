@@ -53,21 +53,28 @@ class SongsHandler {
         return {
           status: 'success',
           data: {
-            songs,
+            songs: songs.map((song) => ({
+              id: song.id,
+              title: song.title,
+              performer: song.performer,
+            })),
           },
         };
       }
     
       async getSongByIdHandler(request, h) {
         try {
-          const { id } = request.params;
-          const song = await this._service.getSongById(id);
-          return {
+          const { songId } = request.params;
+          const song = await this._service.getSongById(songId);
+
+          const response = h.response({
             status: 'success',
             data: {
               song,
             },
-          };
+          });
+          response.code(200);
+          return response;
         } catch (error) {
           if (error instanceof ClientError) {
             const response = h.response({
@@ -93,9 +100,9 @@ class SongsHandler {
         try {
           await this._validator.validateSongPayload(request.payload);
     
-          const { id } = request.params;
+          const { songId } = request.params;
     
-          this._service.editSongById(id, request.payload);
+          this._service.editSongById(songId, request.payload);
     
           return {
             status: 'success',
@@ -124,8 +131,8 @@ class SongsHandler {
     
       async deleteSongByIdHandler(request, h) {
         try {
-          const { id } = request.params;
-          await this._service.deleteSongById(id);
+          const { songId } = request.params;
+          await this._service.deleteSongById(songId);
           return {
             status: 'success',
             message: 'Lagu berhasil dihapus',
