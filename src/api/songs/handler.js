@@ -12,12 +12,12 @@ class SongsHandler {
         this.deleteSongByIdHandler = this.deleteSongByIdHandler.bind(this);
     }
 
-    async postSongHandler(request, h) {
+    async postSongHandler({payload}, h) {
         try {
-          this._validator.validateSongPayload(request.payload);
-          const { title = 'untitled', year, performer, genre, duration } = request.payload;
+          this._validator.validateSongPayload(payload);
+          const { title = title, year, performer, genre, duration } = payload;
     
-          const songId = await this._service.addSong({ title, year, performer, genre, duration });
+          const songId = await this._service.addSong(payload);
     
           const response = h.response({
             status: 'success',
@@ -48,18 +48,29 @@ class SongsHandler {
         }
       }
     
-      async getSongsHandler() {
-        const songs = await this._service.getSongs();
-        return {
-          status: 'success',
-          data: {
-            songs: songs.map((song) => ({
-              id: song.id,
-              title: song.title,
-              performer: song.performer,
-            })),
-          },
-        };
+      async getSongsHandler(request, h) {
+        try {
+          const songs = await this._service.getSongs();
+          return {
+            status: 'success',
+            data: {
+              songs: songs.map((song) => ({
+                id: song.id,
+                title: song.title,
+                performer: song.performer,
+              })),
+            },
+          };
+        } catch (error) {
+          // Server ERROR!
+          const response = h.response({
+            status: 'error',
+            message: 'Maaf, terjadi kegagalan pada server kami.',
+          });
+          response.code(500);
+          console.error(error);
+          return response;
+        }
       }
     
       async getSongByIdHandler(request, h) {
