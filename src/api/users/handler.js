@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const ClientError = require('../../exceptions/ClientError');
 
 class UsersHandler {
@@ -10,14 +11,14 @@ class UsersHandler {
 
   async postUserHandler(request, h) {
     try {
-      this._validator.validateUserPayload(request.  payload);
+      this._validator.validateUserPayload(request.payload);
       const { username, password, fullname } = request.payload;
       const userId = await this._service.addUser({ username, password, fullname });
       const response = h.response({
         status: 'success',
-        message: 'User berhasil ditambahkan', 
+        message: 'User berhasil ditambahkan',
         data: {
-          userId, 
+          userId,
         },
       });
       response.code(201);
