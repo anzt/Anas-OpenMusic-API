@@ -23,6 +23,14 @@ const routes = (handler) => [
       auth: 'songsapp_jwt',
     },
   },
+  // {
+  //   method: 'POST',
+  //   path: '/playlist/{playlistId}/songs',
+  //   handler: handler.postPlaylistsongHandler,
+  //   options: {
+  //     auth: 'songsapp_jwt',
+  //   },
+  // },
 ];
 
 module.exports = routes;

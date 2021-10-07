@@ -4,6 +4,7 @@ const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
+// const { mapPlaylists } = require('../../utils/mapPlaylists');
 
 class PlaylistsService {
   constructor() {
@@ -29,11 +30,12 @@ class PlaylistsService {
 
   async getPlaylist(owner) {
     const query = {
-      text: 'SELECT * FROM playlists WHERE owner = $1',
+      text: 'SELECT playlists.id as id, playlists.name as name, users.username as username FROM playlists INNER JOIN users ON users.id=playlists.owner WHERE playlists.owner = $1',
       values: [owner],
     };
     const result = await this._pool.query(query);
-    return result;
+    // console.log(result.rows);
+    return result.rows;
   }
 
   async deletePlaylistById(id) {

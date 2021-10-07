@@ -8,6 +8,8 @@ class PlaylistsHandler {
     this._validator = validator;
 
     this.postPlaylistHandler = this.postPlaylistHandler.bind(this);
+    this.getPlaylistHandler = this.getPlaylistHandler.bind(this);
+    this.deletePlaylistByIdHandler = this.deletePlaylistByIdHandler.bind(this);
   }
 
   async postPlaylistHandler(request, h) {
@@ -47,23 +49,35 @@ class PlaylistsHandler {
     }
   }
 
-  async getPlaylistHandler(request) {
-    const { id: credentialId } = request.auth.credentials;
-    const playlists = await this._service.getPlaylist(credentialId);
-    return {
-      status: 'success',
-      data: {
-        playlists,
-      },
-    };
+  async getPlaylistHandler(request, h) {
+    try {
+      const { id: credentialId } = request.auth.credentials;
+      const playlists = await this._service.getPlaylist(credentialId);
+      const response = h.response({
+        status: 'success',
+        data: {
+          playlists,
+        },
+      });
+      response.code(200);
+      return response;
+    } catch (error) {
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
   }
 
   async deletePlaylistByIdHandler(request, h) {
     try {
       const { id } = request.params;
       const { id: credentialId } = request.auth.credentials;
-      await this._service.verifyNoteOwner(id, credentialId);
-      await this._service.deleteNoteById(id);
+      await this._service.verifyPlaylistOwner(id, credentialId);
+      await this._service.deletePlaylistById(id);
 
       return {
         status: 'success',
