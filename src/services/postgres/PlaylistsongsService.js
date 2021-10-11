@@ -7,9 +7,8 @@ const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class PlaylistsongsService {
-  constructor(playlistService) {
+  constructor() {
     this._pool = new Pool();
-    this._playlistService = playlistService;
   }
 
   async addPlaylistsong(playlistId, songId) {
