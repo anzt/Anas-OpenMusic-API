@@ -27,7 +27,18 @@ class PlaylistsongsService {
     return result.rows[0].id;
   }
 
-  // async getPlaylistsong()
+  async getPlaylistsongs(playlistId) {
+    const query = {
+      text: 'SELECT ps.id, s.title, s.performer FROM playlistsongs ps LEFT JOIN songs s ON ps.song_id = s.id WHERE ps.playlist_id = $1 ',
+      values: [playlistId],
+    };
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new InvariantError('Playlist gagal diverifikasi');
+    }
+    return result.rows;
+  }
 
   async deletePlaylistsong(playlistId, songId) {
     const query = {
@@ -42,10 +53,10 @@ class PlaylistsongsService {
     }
   }
 
-  async verifyPlaylistsongOwner(playlistid, owner) {
+  async verifyPlaylistsongOwner(playlistId, credentialId) {
     const query = {
       text: 'SELECT owner FROM playlists WHERE id = $1',
-      values: [playlistid],
+      values: [playlistId],
     };
 
     const result = await this._pool.query(query);
@@ -55,8 +66,7 @@ class PlaylistsongsService {
     }
 
     const playlistsong = result.rows[0];
-
-    if (playlistsong.owner !== owner) {
+    if (playlistsong.owner !== credentialId) {
       throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
     }
   }
