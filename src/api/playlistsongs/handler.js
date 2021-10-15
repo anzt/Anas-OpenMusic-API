@@ -64,15 +64,6 @@ class PlaylistsongsHandler {
     });
     response.code(200);
     return response;
-    // } catch (error) {
-    //   const response = h.response({
-    //     status: 'error',
-    //     message: 'Maaf, terjadi kegagalan pada server kami.',
-    //   });
-    //   response.code(500);
-    //   console.error(error);
-    //   return response;
-    // }
   }
 
   async deletePlaylistsongByIdHandler(request, h) {

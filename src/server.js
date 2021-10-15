@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-console */
 require('dotenv').config();
 
@@ -30,6 +31,11 @@ const PlaylistsValidator = require('./validator/playlists');
 const playlistsongs = require('./api/playlistsongs');
 const PlaylistsongsService = require('./services/postgres/PlaylistsongsService');
 const playlistsongsValidator = require('./validator/playlistsongs');
+
+// exports
+const _exports = require('./api/exports');
+const ProducerService = require('./services/rabbitmq/ProducerService');
+const ExportsValidator = require('./validator/exports');
 
 const init = async () => {
   const songsService = new SongsService();
@@ -122,6 +128,14 @@ const init = async () => {
       options: {
         service: playlistsongsService,
         validator: playlistsongsValidator,
+      },
+    },
+    {
+      plugin: _exports,
+      options: {
+        ProducerService,
+        playlistsongsService,
+        validator: ExportsValidator,
       },
     },
   ]);
