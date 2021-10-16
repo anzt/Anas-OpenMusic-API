@@ -4,8 +4,8 @@ const ExportsHandler = require('./handler');
 module.exports = {
   name: 'exports',
   version: '1.0.0',
-  register: async (server, { serviceExports, servicePlaylistsongs, validator }) => {
-    const exportsHandler = new ExportsHandler(serviceExports, servicePlaylistsongs, validator);
+  register: async (server, { ProducerService, playlistsongsService, validator }) => {
+    const exportsHandler = new ExportsHandler(ProducerService, playlistsongsService, validator);
     server.route(routes(exportsHandler));
   },
 };
