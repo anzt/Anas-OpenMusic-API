@@ -19,7 +19,7 @@ class ExportsHandler {
       await this._playlistsongsService.verifyPlaylistsongOwner(playlistId, credentialId);
 
       const message = {
-        userId: request.auth.credentials.id,
+        playlistId: request.params,
         targetEmail: request.payload.targetEmail,
       };
 

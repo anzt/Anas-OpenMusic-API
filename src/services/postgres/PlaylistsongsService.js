@@ -43,7 +43,9 @@ class PlaylistsongsService {
       if (!result.rows.length) {
         throw new InvariantError('Playlist gagal diverifikasi');
       }
-      return result.rows;
+      const resultRows = result.rows;
+      await this._cacheService.set(`playlist:${playlistId}`, JSON.stringify(resultRows));
+      return resultRows;
     }
   }
 
